@@ -1,4 +1,11 @@
+# Nameles
+## First ever open source solution for detecting invalid traffic (ad fraud)
 
+### Overview
+
+Nameles is an entropy based open source ad fraud detection solution that detects traffic anomalies agnostically across desktop and mobile. It has been proven[1] to deliver excellent results in detecting banner, video and app fraud at large scale with minimal Total-Cost-of-Ownership.
+
+Learn more at http://nameles.org
 
 ### Log File Format 
 

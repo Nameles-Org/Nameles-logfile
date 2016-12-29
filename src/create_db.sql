@@ -1,0 +1,34 @@
+/********** NAMELESS - CREATE POSTGRESQL DATABASE **********
+ *
+ *   author = Antonio Pastor <anpastor@it.uc3m.es>
+ *   license = GNU/GPLv3
+ *
+ ***********************************************************/
+
+CREATE ROLE nameless CREATEDB;
+SET ROLE nameless;
+CREATE DATABASE nameless;
+\connect nameless
+SET ROLE nameless;
+CREATE SCHEMA IF NOT EXISTS tuples;
+CREATE SCHEMA IF NOT EXISTS stats;
+
+ALTER DATABASE nameless set search_path TO public,stats,tuples,lookup;
+
+-- Generic tuples table
+CREATE TABLE tuples.ip_ref (
+  ip cidr DEFAULT NULL, -- classless inter-domain routing IP type
+  referrer text DEFAULT NULL,
+  cnt int DEFAULT NULL
+);
+
+-- Stats tables
+CREATE TABLE stats.ip (
+  ip cidr NOT NULL PRIMARY KEY
+)
+WITH (fillfactor=10);
+
+CREATE TABLE stats.referrer (
+  referrer text NOT NULL PRIMARY KEY
+)
+WITH (fillfactor=10);

@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+if which pyclean >/dev/null 2>&1; then
+        py3clean -p nameless-postgresql-@PGSQL_MAJOR@
+else
+        dpkg -L nameless-postgresql-@PGSQL_MAJOR@ | grep \.py$ | while read file
+        do
+                rm -f "${file}"[co] >/dev/null
+        done
+fi
+

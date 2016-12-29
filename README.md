@@ -7,6 +7,31 @@ Nameles is an entropy based open source ad fraud detection solution that detects
 
 Learn more at http://nameles.org
 
+### Method 
+
+Nameles use a three staged approach where: 
+
+1) Entropy is computed for each referrer in the dataset
+2) The Normalized Entropy Score (NES) is calculated for each referrer
+3) Based on NES the referrers are grouped in to statistically meaningful groups
+
+The grouping in step-3 is done based on how suspicious the referrer is based on its NES score. The groupings: 
+
+- critical (highest level of suspicion)
+- high
+- moderate
+- low (highest level of suspicion)
+
+The way the score is calculated and the resulting grouping is affected by the way the system owner sets the rules for scoring. The owner is left with the decision if they want to set the system to have many false positive or many false negatives. The recommendation is for "paranoid" setting, as there is much more inventory in the programmatic market than there is demand. In fact, due to the high perishability of media inventory, it is likely that more than 90% of all inventory never gets sold. Even if just 10% is never getting sold, filtering out 10% would not reduce inventory that is available for buying.  
+
+### NES Score 
+
+The unique value of Nameles is the Normalized Entropy Score (NES) it provides for any referrer, regardless if it's desktop or mobile, app, video or banners. The formal expression to compute NES is as follows:
+
+[![Screen Shot 2016-12-29 at 18.34.59.png](https://s23.postimg.org/noboa25fv/Screen_Shot_2016_12_29_at_18_34_59.png)](https://postimg.org/image/vh2c21bev/)
+
+Depending on the database backend, the C codes that compute the NES can process roughly 10 billion rows of bid stream data per 24 hour with a standard 48gb RAM Linux server. 
+
 ### Log File Format 
 
 Nameles has been built and tested with various common bid / log file formats, and can be easily setup to work with others. The codes that you find in the repo will work with the following format out-of-the-box:

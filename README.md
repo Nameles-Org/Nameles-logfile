@@ -12,7 +12,9 @@ Learn more at http://nameles.org
 Nameles use a three staged approach where: 
 
 1) Entropy is computed for each referrer in the dataset
+
 2) The Normalized Entropy Score (NES) is calculated for each referrer
+
 3) Based on NES the referrers are grouped in to statistically meaningful groups
 
 The grouping in step-3 is done based on how suspicious the referrer is based on its NES score. The groupings: 

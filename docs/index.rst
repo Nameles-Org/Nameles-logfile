@@ -43,7 +43,15 @@ Upload your logfile format::
 
     ./nameless-log-migration <logday> /path/to/log/files/my_log_000*.csv.gz
 
-The script log_migration.py, when called as before, will create the following tables in the database:
+Where <logday> is the date of the file you are uploading. 
+
+NOTE: you can test your installation first using the provided test log file:: 
+
+    wget https://github.com/Nameles-Org/Nameles/blob/master/tests/ssp_bid_sample.csv.gz && ./nameless-log-migration 20160101 /path/to/log/files/ssp_bid_sample.csv.gz
+    
+In some cases you have to do minor changes to your log file format before running nameless-log-migration script. 
+
+This will create the following tables in the database:
 
 tuples.ip_ref_<logday> Table of tuples <IP, referrer, count> with the aggregate count of non-concurrent ad-requests with the same IP and referrer.
 

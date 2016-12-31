@@ -7,6 +7,7 @@ Nameles is an entropy based open source ad fraud detection solution that detects
 
 Learn more at http://nameles.org
 
+
 ### Getting Started 
 
 At the moment you have recommended options:
@@ -23,7 +24,7 @@ NOTE: this will still require PostgreSQL (9.4) to be installed in the system.
 
 ##### Install from Linux Package [EXPERIMENTAL]
 
-
+https://github.com/Nameles-Org/Nameles/tree/master/Easy%20Install%20Option
 
 
 ### Method 

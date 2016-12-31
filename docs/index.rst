@@ -46,13 +46,13 @@ Nameles use a three staged approach where:
 
 The grouping in step-3 is done based on how suspicious the referrer is based on its NES score. The groupings:
 
-critical (highest level of suspicion)
+**critical (highest level of suspicion)**
 
-high
+**high**
 
-moderate
+**moderate**
 
-low (highest level of suspicion)
+**low (highest level of suspicion)**
 
 The way the score is calculated and the resulting grouping is affected by the way the system owner sets the rules for scoring. The owner is left with the decision if they want to set the system to have many false positive or many false negatives. The recommendation is for "paranoid" setting, as there is much more inventory in the programmatic market than there is demand. In fact, due to the high perishability of media inventory, it is likely that more than 90% of all inventory never gets sold. Even if just 10% is never getting sold, filtering out 10% would not reduce inventory that is available for buying.
 

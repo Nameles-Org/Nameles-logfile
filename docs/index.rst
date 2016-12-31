@@ -22,6 +22,28 @@ Install from source (with SQL port)
 .......
 https://github.com/Nameles-Org/Nameles/tree/master/Nameles-SQL
 
+    cd entropy-postgresql && make && sudo make install && cd ..
+
+Create a database for the Botlab log files in postgres and create the entropy functions in the new database
+
+    psql -f create_db.sql
+    psql -d nameless -f entropy-postgresql/create_functions.sql
+
+Install the python packages psycopg2 and tld, used by log_migration.py to upload compressed log files.
+
+    pip install psycopg2
+    pip install tld
+
+How to upload logs
+
+    ./nameless-log-migration <logday> /path/to/log/files/my_log_000*.csv.gz
+
+The script log_migration.py, when called as before, will create the following tables in the database:
+
+tuples.ip_ref_<logday> Table of tuples <IP, referrer, count> with the aggregate count of non-concurrent ad-requests with the same IP and referrer.
+
+Temporary tables with the total number of ad-requests and normalized entropy score for the log day of both, referrers and IPs. These tables will be merged in the stats tables for IPs and referrers.
+
 Install from source (without SQL port)
 .......
 https://github.com/Nameles-Org/Nameles/tree/master/Nameles-nodb
@@ -31,6 +53,16 @@ NOTE: this will still require PostgreSQL (9.4) to be installed in the system.
 Install from Linux Package [EXPERIMENTAL]
 
 https://github.com/Nameles-Org/Nameles/tree/master/Easy%20Install%20Option
+
+------
+Usage
+------
+
+By Querying the Database 
+
+The tables in the database can be queried as regular SQL tables.
+
+Through an API
 
 ------
 Method

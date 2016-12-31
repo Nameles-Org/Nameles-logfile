@@ -3,7 +3,7 @@
 
 ### Overview
 
-Nameles is an entropy based open source ad fraud detection solution that detects traffic anomalies agnostically across desktop and mobile. It has been proven[1] to deliver excellent results in detecting banner, video and app fraud at large scale with minimal Total-Cost-of-Ownership.
+Nameles is an entropy based open source ad fraud detection solution that detects traffic anomalies agnostically across desktop and mobile. It has been proven[[1]](http://www.it.uc3m.es/rcuevas/techreports/entropy_method.pdf) to deliver excellent results in detecting banner, video and app fraud at large scale with minimal Total-Cost-of-Ownership.
 
 Learn more at http://nameles.org
 
@@ -64,5 +64,3 @@ The core developer of the project is Antonio Pastor (@apastor). Other major cont
 And last but not least, the Master himself, RR. Alan Turing of our time.
 
 [1] http://www.it.uc3m.es/rcuevas/techreports/entropy_method.pdf
-
-[[1]] (http://www.it.uc3m.es/rcuevas/techreports/entropy_method.pdf)

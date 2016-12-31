@@ -26,7 +26,7 @@ Create the environment::
 
     cd entropy-postgresql && make && sudo make install && cd ..
 
-Create a databaseL:: for the Botlab log files in postgres and 
+Create a database::
 
     psql -f create_db.sql
     
@@ -50,7 +50,8 @@ tuples.ip_ref_<logday> Table of tuples <IP, referrer, count> with the aggregate 
 Temporary tables with the total number of ad-requests and normalized entropy score for the log day of both, referrers and IPs. These tables will be merged in the stats tables for IPs and referrers.
 
 Install from source (without SQL port)
-.......
+......................................
+
 https://github.com/Nameles-Org/Nameles/tree/master/Nameles-nodb
 
 NOTE: this will still require PostgreSQL (9.4) to be installed in the system.

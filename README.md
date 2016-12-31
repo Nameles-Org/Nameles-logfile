@@ -7,6 +7,16 @@ Nameles is an entropy based open source ad fraud detection solution that detects
 
 Learn more at http://nameles.org
 
+### Getting Started 
+
+You can get started by choosing one of the available packages:
+
+- Debian 7
+- Ubuntu 16.04 or 16.10
+
+Or you can use the provided source codes. 
+
+
 ### Method 
 
 Nameles use a three staged approach where: 
@@ -26,13 +36,22 @@ The grouping in step-3 is done based on how suspicious the referrer is based on 
 
 The way the score is calculated and the resulting grouping is affected by the way the system owner sets the rules for scoring. The owner is left with the decision if they want to set the system to have many false positive or many false negatives. The recommendation is for "paranoid" setting, as there is much more inventory in the programmatic market than there is demand. In fact, due to the high perishability of media inventory, it is likely that more than 90% of all inventory never gets sold. Even if just 10% is never getting sold, filtering out 10% would not reduce inventory that is available for buying.  
 
+
 ### NES Score 
 
 The unique value of Nameles is the Normalized Entropy Score (NES) it provides for any referrer, regardless if it's desktop or mobile, app, video or banners. The formal expression to compute NES is as follows:
 
 [![Screen Shot 2016-12-29 at 18.34.59.png](https://s23.postimg.org/noboa25fv/Screen_Shot_2016_12_29_at_18_34_59.png)](https://postimg.org/image/vh2c21bev/)
 
-Depending on the database backend, the C codes that compute the NES can process roughly 10 billion rows of bid stream data per 24 hour with a standard 48gb RAM Linux server. 
+
+### Total-Cost-of-Operation
+
+One of the key considerations in the research and development that led to Nameles was Total-Cost-of-Onwership. This can be split in to two parts; Non-Recurring-Cost (NRC) and Recurring-Cost (RC). 
+
+In the case of NRC, we can safely say that it is negligible. In fact, a small startup company could fully deploy and adopt for actual business use, the Nameles system with 1 man-week of work, if not less. In the case of bigger organizations, there tends to be more overhead with introducing anything new, so NRC might be higher depending on the culture and other factors pertaining to the organization in question. 
+
+In terms of RC, depending on the database backend, the C codes that compute the NES can process roughly 10 billion rows of bid stream data per 24 hour period with a 16-core 48gb RAM Linux server. Using the same machine and the SQL provided you'll find in this repository, scores can be computed to up to 2 billion rows per day. 
+
 
 ### Log File Format 
 

@@ -61,7 +61,7 @@ NES Score
 ---------
 The unique value of Nameles is the Normalized Entropy Score (NES) it provides for any referrer, regardless if it's desktop or mobile, app, video or banners. The formal expression to compute NES is as follows:
 
-Screen Shot 2016-12-29 at 18.34.59.png
+.. image:: https://s23.postimg.org/noboa25fv/Screen_Shot_2016_12_29_at_18_34_59.png
 
 ---------
 Total-Cost-of-Operation

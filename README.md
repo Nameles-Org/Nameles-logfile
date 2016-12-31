@@ -9,12 +9,21 @@ Learn more at http://nameles.org
 
 ### Getting Started 
 
-You can get started by choosing one of the available packages:
+At the moment you have recommended options:
 
-- Debian 7
-- Ubuntu 16.04 or 16.10
+##### Install from source (with SQL port)
 
-Or you can use the provided source codes. 
+https://github.com/Nameles-Org/Nameles/tree/master/Nameles-SQL
+
+##### Install from source (without SQL port)
+
+https://github.com/Nameles-Org/Nameles/tree/master/Nameles-nodb
+
+NOTE: this will still require PostgreSQL (9.4) to be installed in the system.
+
+##### Install from Linux Package [EXPERIMENTAL]
+
+
 
 
 ### Method 

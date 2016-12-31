@@ -22,19 +22,24 @@ Install from source (with SQL port)
 .......
 https://github.com/Nameles-Org/Nameles/tree/master/Nameles-SQL
 
+Create the environment::
+
     cd entropy-postgresql && make && sudo make install && cd ..
 
-Create a database for the Botlab log files in postgres and create the entropy functions in the new database
+Create a databaseL:: for the Botlab log files in postgres and 
 
     psql -f create_db.sql
+    
+Create the entropy functions in the new database::
+
     psql -d nameless -f entropy-postgresql/create_functions.sql
 
-Install the python packages psycopg2 and tld, used by log_migration.py to upload compressed log files.
+Install the required python packages for log_migration.py to upload compressed log files::
 
     pip install psycopg2
     pip install tld
 
-How to upload logs
+Upload your logfile format::
 
     ./nameless-log-migration <logday> /path/to/log/files/my_log_000*.csv.gz
 

@@ -53,13 +53,14 @@ Nameles has been built and tested with various common bid / log file formats, an
 
 The core developer of the project is Antonio Pastor (@apastor). Other major contributors include:
 
-Patricia Callejo
-Arturo Azcorra
-Ruben Cuevas
-Angel Cuevas
-Matti Parssinen
-Amit Phansalkar
-Mikko Kotila
+- Patricia Callejo
+- Arturo Azcorra
+- Ruben Cuevas
+- Angel Cuevas
+- Matti Parssinen
+- Amit Phansalkar
+- Mikko Kotila
+
 And last but not least, the Master himself, RR. Alan Turing of our time.
 
 [1] http://www.it.uc3m.es/rcuevas/techreports/entropy_method.pdf

@@ -78,18 +78,3 @@ Nameles has been built and tested with various common bid / log file formats, an
     76.198.138,zcqXdwf+7pNrBAK+ksmEEn/G6iI=,YHC/1.0,mg.mail.yahoo.com,,2016-12-01 14:26:27
     107.219.252.241,LF5rUhJzH15Oh9BrtFRRiu7cY+g=,"Mozilla/5.0 (Linux; Android 6.0.1; SM-G900V Build/MMB29M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/54.0.2840.85 Mobile Safari/537.36",net.zedge.android,,2016-12-01 14:19:04
 
-### Contributors
-
-The core developer of the project is Antonio Pastor (@apastor). Other major contributors include:
-
-- Patricia Callejo
-- Arturo Azcorra
-- Ruben Cuevas
-- Angel Cuevas
-- Matti Parssinen
-- Amit Phansalkar
-- Mikko Kotila
-
-And last but not least, the Master himself, RR. Alan Turing of our time.
-
-[1] http://www.it.uc3m.es/rcuevas/techreports/entropy_method.pdf

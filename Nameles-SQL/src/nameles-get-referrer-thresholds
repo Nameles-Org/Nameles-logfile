@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import psycopg2
+import argparse
+from getpass import getuser
+
+__author__ = "Antonio Pastor"
+__copyright__ = "Copyright 2016, Antonio Pastor"
+
+__license__ = "GPL v3"
+__version__ = "1.1"
+__maintainer__ = "Antonio Pastor"
+__email__ = "anpastor@it.uc3m.es"
+__status__ = "Development"
+
+
+POSTGRES_USER = getuser()
+POSTGRES_DB = 'nameles'
+
+def main(log_day,min_requests):
+
+    conn = psycopg2.connect("dbname=%s user=%s" % (POSTGRES_DB, POSTGRES_USER))
+    cur = conn.cursor()
+    cur.execute("select percentile_cont(array[1,0.75,0.50,0.25]) within group (order by score_{0}) from stats.referrer where total_{0}>={1};".format(log_day,min_requests))
+    conn.commit()
+    (perc100,perc75,perc50,perc25) = cur.fetchone()[0]
+    IQR = perc75-perc25
+    UHR = perc100-perc50
+    slightly_suspicious = perc50 - UHR
+    suspicious = perc50 - 2*UHR
+    highly_suspicious = perc25 - 1.5*IQR
+
+    print("Statistical thresholds")
+    print("Slightly suspicious:\t", slightly_suspicious)
+    print("Suspicious:\t\t", suspicious)
+    print("Highly suspicious:\t", highly_suspicious)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Compute statistical thresholds for the referrer's score")
+    parser.add_argument("log_day", help="Day for which to compute the thresholds", type=str)
+    parser.add_argument("--minimum", "-m", help="Minimum ad-requests to include the referrer in the population", type=int, default=1000)
+    args = parser.parse_args()
+    main(args.log_day,args.minimum)

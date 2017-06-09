@@ -1,10 +1,12 @@
 #!/bin/sh
 set -e
 
+rm -f /usr/share/nameles/nameles-port
+
 if which pyclean >/dev/null 2>&1; then
-        py3clean -p nameless-postgresql-@PGSQL_MAJOR@
+        py3clean -p nameles-postgresql-@PGSQL_MAJOR@
 else
-        dpkg -L nameless-postgresql-@PGSQL_MAJOR@ | grep \.py$ | while read file
+        dpkg -L nameles-postgresql-@PGSQL_MAJOR@ | grep \.py$ | while read file
         do
                 rm -f "${file}"[co] >/dev/null
         done

@@ -1,0 +1,4 @@
+/usr/lib/postgresql/@PGSQL_MAJOR@/lib
+usr/bin
+usr/share/nameles
+usr/share/nameles/libs

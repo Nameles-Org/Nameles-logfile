@@ -1,4 +1,4 @@
-Source: nameless-postgresql
+Source: nameles-postgresql
 Section: misc
 Priority: optional
 Maintainer: Antonio Pastor <anpastor@it.uc3m.es>
@@ -10,20 +10,22 @@ Build-Depends: debhelper (>= 9),
 	python3-pip,
 	postgresql-server-dev-all
 Standards-Version: 3.9.5
-Homepage: https://github.com/apastor/nameless-postgresql
-Vcs-Git: https://github.com/apastor/nameless-postgresql.git
-X-Python-Version: >= 2.7
+Homepage: https://github.com/apastor/nameles-postgresql
+Vcs-Git: https://github.com/apastor/nameles-postgresql.git
+X-Python3-Version: >= 3.4
 
-Package: nameless-postgresql-@PGSQL_MAJOR@
+Package: nameles-postgresql-@PGSQL_MAJOR@
 Architecture: amd64
 Depends: ${shlibs:Depends},
 	${misc:Depends},
-    ${python:Depends},
-	postgresql-@PGSQL_MAJOR@,
-	sudo,
+	${python3:Depends},
 	python3-psycopg2,
-	python3-six (>= 1.4),
-    python3-minimal
-Description: nameless entropy score for ad-fraud detection
+	python3-six,
+	python3-psutil,
+	python3-numpy,
+	postgresql-@PGSQL_MAJOR@,
+	bc,
+	sudo
+Description: nameles entropy score for ad-fraud detection
  This package computes the normalized entropy score in a postgresql database 
  from log files of ad-requests

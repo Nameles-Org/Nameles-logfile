@@ -1,0 +1,36 @@
+#!/bin/bash
+
+print_usage(){
+  echo "usage: nameles-createuser [options] user_name"
+  echo "  options:"
+  echo "    -P	Prompt for the password of the new user. The password can be set later"
+  echo "	in psql with the \password command."
+  echo "    -h	Print this message and exit."
+}
+
+
+if [[ $# -eq 0 || $# -gt 2 ]]
+  then
+    print_usage
+    exit 1
+fi
+
+for i in $@
+do
+  case $i in
+  "-P")
+    PASS=-P
+    ;;
+  "-h")
+    print_usage
+    exit 0
+    ;;
+  *)
+    NEWUSER=$i
+    ;;
+esac
+done
+
+( cd /tmp && sudo -u postgres createuser -erd $PASS $NEWUSER )
+
+( cd /tmp && sudo -u postgres psql -d nameles -c "GRANT nameles TO $NEWUSER" )

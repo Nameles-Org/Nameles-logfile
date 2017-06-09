@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 #PGSQLMAJOR=$(shell pg_config --version | grep -Eo "[0-9]+\.[0-9]")
 
-DESTDIR=$$(pwd)/debian/nameless-postgresql-$(PGSQLMAJOR)
+DESTDIR=$$(pwd)/debian/nameles-postgresql-$(PGSQLMAJOR)
 
 # See debhelper(7) (uncomment to enable)
 # output every command that modifies files on the build system.
@@ -13,13 +13,13 @@ DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/default.mk
 
 # see FEATURE AREAS in dpkg-buildflags(1)
-#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+# export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 # see ENVIRONMENT in dpkg-buildflags(1)
 # package maintainers to append CFLAGS
-#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
 # package maintainers to append LDFLAGS
-#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
 
 # main packaging script based on dh7 syntax
@@ -34,11 +34,8 @@ include /usr/share/dpkg/default.mk
 
 
 override_dh_auto_build:
-	$(MAKE) PGSQLINCLUDEDIR=$(PGSQLINCLUDEDIR)
+	$(MAKE) PGSQLINCLUDEDIR=/usr/include/postgresql/$(PGSQLMAJOR)/server/
 
 override_dh_auto_install:
-	$(MAKE) DESTDIR=$(DESTDIR) prefix=/usr install
-	find $(DESTDIR)/usr/share/nameless/libs/ -name '*.py[co]' -delete
-	cd $(DESTDIR)/usr/lib/ \
-	&& mv libentropy-postgresql.so libentropy-postgresql.so.$(PGSQLMAJOR) \
-	&& ln -s libentropy-postgresql.so.$(PGSQLMAJOR) libentropy-postgresql.so
+	$(MAKE) DESTDIR=$(DESTDIR) prefix=/usr install PKGLIBDIR=/usr/lib/postgresql/$(PGSQLMAJOR)/lib/ 
+	find $(DESTDIR)/usr/share/nameles/libs/ -name '*.py[co]' -delete

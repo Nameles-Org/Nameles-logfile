@@ -1,19 +1,19 @@
-/********** NAMELESS - CREATE POSTGRESQL DATABASE **********
+/********** NAMELES - CREATE POSTGRESQL DATABASE **********
  *
  *   author = Antonio Pastor <anpastor@it.uc3m.es>
  *   license = GNU/GPLv3
  *
  ***********************************************************/
 
-CREATE ROLE nameless CREATEDB;
-SET ROLE nameless;
-CREATE DATABASE nameless;
-\connect nameless
-SET ROLE nameless;
+CREATE USER nameles CREATEDB;
+SET ROLE nameles;
+create database nameles WITH OWNER=nameles TEMPLATE=template0 LC_COLLATE='C';
+\connect nameles
+SET ROLE nameles;
 CREATE SCHEMA IF NOT EXISTS tuples;
 CREATE SCHEMA IF NOT EXISTS stats;
 
-ALTER DATABASE nameless set search_path TO public,stats,tuples,lookup;
+ALTER DATABASE nameles set search_path TO public,stats,tuples,lookup;
 
 -- Generic tuples table
 CREATE TABLE tuples.ip_ref (

@@ -1,0 +1,3 @@
+#!/bin/bash
+read -r PORT < /usr/share/nameles/nameles-port
+psql -p $PORT -U nameles -d nameles

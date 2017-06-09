@@ -1,52 +1,60 @@
-# Nameles
-
+# nameles-postgresql
 Scripts and functions to compute the normalized entropy score in PostgreSQL (>=9.4)
 
-First ever open source solution for detecting invalid traffic (ad fraud)
+## Install from debian package
 
-Nameles is an entropy based open source ad fraud detection solution that detects traffic anomalies agnostically across desktop and mobile. It has been proven[1] to deliver excellent results in detecting banner, video and app fraud at large scale with minimal Total-Cost-of-Ownership.
+Select the debian package that suits the PostgreSQL version of your linux distribution and install it:
 
-
-### Install
-
-1. Compile and install the entropy functions in postgres
-
-  ```bash
-  cd entropy-postgresql && make && sudo make install && cd ..
-  ```
-2. Create a database for the [Botlab](http://botlab.io) log files in postgres and create the entropy functions in the new database
-
-  ```bash
-  psql -f create_db.sql
-  psql -d nameless -f entropy-postgresql/create_functions.sql
-  ```
-3. Install the python packages [psycopg2](http://initd.org/psycopg) and [tld](https://pypi.python.org/pypi/tld), used by `log_migration.py` to upload compressed log files.
-
-### How to upload logs
 ```bash
-./nameless-log-migration <logday> /path/to/log/files/my_log_000*.csv.gz
+sudo dpkg -i nameles-postgresql-9.5_0.1-1_amd64.deb
+# It will fail cause the dependencies. Run the next command to install everything
+sudo apt-get -f install
 ```
-The script `log_migration.py`, when called as before, will create the following tables in the database:
-  - **tuples.ip_ref\_\<logday\>** Table of tuples \<IP, referrer, count\> with the aggregate count of non-concurrent ad-requests with the same IP and referrer.
+
+## How to upload logs
+
+```bash
+nameles-log-migration [-H] -i <IP field> -u <url/domain field> -d <logday> /path/to/log/files/my_log_000*.csv.gz
+```
+The script `nameles-log-migration`, when called as above, will create the following tables in the database:
+  - **tuples.ip\_ref\_\<logday\>** Table of tuples \<IP, referrer, count\> with the aggregate count of ad-requests for each IP and referrer pair.
   - Temporary tables with the total number of ad-requests and normalized entropy score for the log day of both, referrers and IPs. These tables will be merged in the stats tables for IPs and referrers.
-  
-### How to query the database
-The tables in the database can be queried as regular SQL tables. 
 
-### Contributing Team
-The core developer of the project is Antonio Pastor (@apastor). Other major contributors include:
+## How to query the database
+The tables in the database can be queried as regular SQL tables. To easily access the Nameles database you can use the `nameles` executable, that is a wrapper to the PostgreSQL client.
 
-Patricia Callejo
-Arturo Azcorra
-Ruben Cuevas
-Angel Cuevas
-Matti Parssinen
-Amit Phansalkar
-Mikko Kotila
-And last but not least, the Master himself, RR. Alan Turing of our time.
+Similarly, you can get the statistical thresholds for any day with
 
+```bash
+nameles-get-referrer-thresholds [--minimum <MIN_ENTRIES>] <log_day>
+```
 
-### References
+## Building from source in Debian/Ubuntu
 
-[1] http://www.it.uc3m.es/rcuevas/techreports/entropy_method.pdf
+1. Install the dependencies. The python package [tld](https://pypi.python.org/pypi/tld) is not available in the Debian repositories, therefore we need to install it with pip for python 3.
 
+  ```bash
+  sudo apt-get install postgresql postgresql-server-dev-all gcc make \
+                       python3 python3-pip sudo python3-psycopg2 python3-numpy
+  sudo pip3 install tld
+  ```
+
+2. Compile and install the entropy functions in PostgreSQL
+
+  ```bash
+  cd nameles-postgresql
+  make
+  sudo make install
+  cd ..
+  ```
+3. Create a database for Nameles in PostgreSQL and the entropy functions in the new database.
+
+  ```bash
+  sudo -u postgres psql -f /usr/share/nameles/create_db.sql
+  sudo -u postgres psql -d nameles -f /usr/share/nameles/create_functions.sql
+  ```
+4. Create a user in PostgreSQL with the same name than your Linux user with the following script. This script will grant the new user all the privileges in the Nameles database.
+
+  ```bash
+  sudo nameles-createuser <username>
+  ```

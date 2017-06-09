@@ -3,7 +3,6 @@
 set -e
 # PKGVERSION=$1
 PGSQLMAJOR=$1
-SRCDIR=$2
 
 make cleanall
 
@@ -11,15 +10,18 @@ make cleanall
 
 #make PGSQLINCLUDEDIR=$SRCDIR/src/include
 
+sed -e "s/@PGSQL_MAJOR@/$PGSQLMAJOR/" debian/dirs.in > debian/dirs
 sed -e "s/@PGSQL_MAJOR@/$PGSQLMAJOR/" debian/control.in > debian/control
+sed -e "s/@PGSQL_MAJOR@/$PGSQLMAJOR/" debian/postinst.in > debian/postinst
 sed -e "s/@PGSQL_MAJOR@/$PGSQLMAJOR/" debian/prerm.in > debian/prerm
+cp debian/nameles-postgresql.lintian-overrides debian/nameles-postgresql-$PGSQLMAJOR.lintian-overrides
 
-# cp debian/postinst debian/nameless-postgresql-$PGSQLMAJOR.postinst
+# cp debian/postinst debian/nameles-postgresql-$PGSQLMAJOR.postinst
 
 # dh_make not needed for building only the binary
-#dh_make -p nameless-postgresql_$PKGVERSION -c gpl3 --createorig -e anpastor@it.uc3m.es -s -d -n -y
+#dh_make -p nameles-postgresql_$PKGVERSION -c gpl3 --createorig -e anpastor@it.uc3m.es -s -d -n -y
 
-debuild --set-envvar=PGSQLINCLUDEDIR=$SRCDIR/src/include --set-envvar=PGSQLMAJOR=$PGSQLMAJOR -b -us -uc
+debuild --set-envvar=PGSQLMAJOR=$PGSQLMAJOR -b -us -uc
 
 make cleanall
 rm -v debian/control

@@ -1,44 +1,41 @@
-CC = gcc
+CC = gcc -std=c99
 PGSQLINCLUDEDIR =$(shell pg_config --includedir-server)
 CFLAGS += -I$(PGSQLINCLUDEDIR) -fPIC -lm
-LIBDIR = /usr/lib
+PKGLIBDIR =$(shell pg_config --pkglibdir)
 BINDIR = /usr/bin
-SBINDIR = /usr/sbin
-SHAREDIR = /usr/share/nameless
+SHAREDIR = /usr/share/nameles
 LNAME = libentropy-postgresql.so
 LSONAME = libentropy-postgresql.so.$(PGSQLMAJOR)
-BINNAME = nameless-log-migration
-SBINNAME = nameless-createuser
+BINNAME = nameles-log-migration nameles-get-referrer-thresholds nameles
 SHARENAME = create_db.sql create_functions.sql test_functions.sql
 OBJS = entropy.o
 
-default: $(LNAME) libs
+default: $(LNAME)
 
 $(LNAME): $(OBJS)
-	$(CC) -shared -o $@ $< $(CFLAGS) $(LIBS)
+	$(CC)  $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -shared -o $@ $< $(LIBS)
 
 %.o: src/%.c
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC)  $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
 
-.PHONY: install uninstall clean libs
+.PHONY: install uninstall clean # libs
 
 libs:
-	if [ ! -d "libs/tld" ]; then pip3 install tld --no-deps -t libs; fi
+	if [ ! -d "libs/tld" ]; then pip3 install tld --no-compile --no-deps -t libs; fi
 
 install:
-	cp -t $(DESTDIR)$(LIBDIR) $(LNAME)
+	cp -t $(DESTDIR)$(PKGLIBDIR) $(LNAME)
 	cp -t $(DESTDIR)$(BINDIR) $(BINNAME:%=src/%)
-	cp -t $(DESTDIR)$(SBINDIR) $(SBINNAME:%=src/%)
-	cp -t $(DESTDIR)$(SHAREDIR) $(SHARENAME:%=src/%)
+	if [ ! -d "$(DESTDIR)$(SHAREDIR)" ]; then mkdir $(DESTDIR)$(SHAREDIR); fi && \
+	cp -t $(DESTDIR)$(SHAREDIR) $(SHARENAME:%=src/%) # && \
 	cp -R -t $(DESTDIR)$(SHAREDIR) libs
 
 uninstall:
-	$(RM) -f $(DESTDIR)$(LIBDIR)/$(LNAME)*
+	$(RM) -f $(DESTDIR)$(PKGLIBDIR)/$(LNAME)*
 	$(RM) -f $(BINNAME:%=$(DESTDIR)$(BINDIR)/%)
-	$(RM) -f $(SBINNAME:%=$(DESTDIR)$(SBINDIR)/%)
 	$(RM) -f $(SHARENAME:%=$(DESTDIR)$(SHAREDIR)/%)
-	$(RM) -r $(DESTDIR)$(SHAREDIR)/libs
+	$(RM) -rf $(DESTDIR)$(SHAREDIR)/libs
 	$(RM) -d $(DESTDIR)$(SHAREDIR) || echo "$(DESTDIR)$(SHAREDIR) not empty, skipping"
 	
 clean:
@@ -47,4 +44,8 @@ clean:
 cleanall: clean
 	$(RM) $(LNAME)
 #	$(RM) -r libs
+
+print:
+	echo $(PKGLIBDIR)
+	echo $(PGSQLINCLUDEDIR)
 

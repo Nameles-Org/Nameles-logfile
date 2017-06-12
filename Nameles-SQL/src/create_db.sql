@@ -5,7 +5,7 @@
  *
  ***********************************************************/
 
-CREATE USER nameles CREATEDB;
+CREATE USER nameles CREATEDB password 'nmls#pwd';
 SET ROLE nameles;
 create database nameles WITH OWNER=nameles TEMPLATE=template0 LC_COLLATE='C';
 \connect nameles

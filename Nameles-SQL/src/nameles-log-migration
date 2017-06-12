@@ -86,7 +86,7 @@ def main(args):
         torun = [compressed_files[i:i+CHUNK_SIZE] for i in range(0,len(compressed_files),CHUNK_SIZE)]
         pool.map(read_gzcsv, torun, 1)
     except:
-        print("error on parallel COPY to postgres")        
+        print("error on parallel COPY to postgres")
         print(traceback.format_exc())
         sys.exit(1)
     finally:
@@ -102,21 +102,21 @@ def main(args):
 
     cur.execute("ANALYZE {}".format(TEMP_TABLE))
     conn.commit()
-       
+
     analyze_time = time()
     print("Analyzed temporary table from copy in {}".format(timedelta(seconds=analyze_time-copied_time) ) )
 
     print("Creating table with (ip, referrer, count) tuples")
-    cur.execute("show work_mem")
-    wm = cur.fetchall()[0][0]
-    cur.execute("SET work_mem = '24GB'")
+    # cur.execute("show work_mem")
+    # wm = cur.fetchall()[0][0]
+    # cur.execute("SET work_mem = '24GB'")
     conn.commit()
     cur.execute("CREATE table {0} AS (SELECT ip, referrer, sum(cnt) AS cnt FROM {1} GROUP BY ip,referrer)".format(tuples_table,TEMP_TABLE) )
-    cur.execute("SET work_mem = '{0}'".format(wm))
+    # cur.execute("SET work_mem = '{0}'".format(wm))
     cur.execute("DROP TABLE {0}".format(TEMP_TABLE))
     conn.commit()
     conn.close()
-     
+
     tuples_time = time()
     print("Created tuples table in {}".format(timedelta(seconds=tuples_time-analyze_time) ) )
 
@@ -151,13 +151,13 @@ def parse_domain(domain):
         return get_tld("https://" + domain_cleaned )
     except:
         return ''
-    
+
 def parse_ip(ip_ascii):
     parsed_ip = ip_ascii.strip('"').split(',')[0].strip(' ')
-    # IP_VALID is the regular expression for IPs v4, declared at the beginning of the script 
+    # IP_VALID is the regular expression for IPs v4, declared at the beginning of the script
     if IP_VALID.match(parsed_ip):
         return parsed_ip
-    else:    
+    else:
         return ''
 
 # class LogDialect(csv.Dialect):
@@ -169,7 +169,7 @@ def parse_ip(ip_ascii):
 #     quoting = csv.QUOTE_MINIMAL
 #     skipinitialspace = True
 #     strict = True
-#     
+#
 #     def __init__(self):
 #         csv.Dialect.__init__(self)
 
@@ -192,7 +192,7 @@ def read_gzcsv(gzfiles):
                 _ip = parse_ip(row[ip_field])
                 _ref = parse_domain(row[domain_field])
                 if _ip!='' and _ref!='':
-                    _tuple_counter[(_ip,_ref)] += 1                 
+                    _tuple_counter[(_ip,_ref)] += 1
         with processed_files.get_lock():
             processed_files.value += 1
     # end for gzfile in gzfiles
@@ -341,4 +341,3 @@ if __name__ == "__main__":
     requiredArgs.add_argument("file", nargs='+', help="compressed file(s) to upload to the database")
     args = parser.parse_args()
     main(args)
-

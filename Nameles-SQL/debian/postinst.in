@@ -26,9 +26,13 @@ case "$1" in
         CPU_COUNT=$(lscpu | awk '/^Core\(s\) per socket:/ {cores=$NF}; /^Socket\(s\):/ {sockets=$NF}; END{print cores*sockets}')
         AUTOVACUUM_WORKERS=$(( $CPU_COUNT > 5 ? $CPU_COUNT/3 : 1 ))
         WORKERS=$(( $CPU_COUNT > 3 ? $CPU_COUNT-$AUTOVACUUM_WORKERS : $CPU_COUNT ))
-        perl -pi -e "s/(?<=^)#?shared_buffers =?.+?(?=\$|\t)/shared_buffers = $(echo "($MEMTOTAL*0.125+0.5)/1" | bc)GB/; \
-            s/(?<=^)#?temp_buffers =?.+?(?=\$|\t)/temp_buffers = $(echo "($MEMTOTAL*0.125+0.5)/1" | bc)GB/; \
-            s/(?<=^)#?work_mem =?.+?(?=\$|\t)/work_mem = $(echo "($MEMTOTAL*0.25+0.5)/1" | bc)GB/; \
+        MEM_BUFFERS=$(echo "($MEMTOTAL*0.125+0.5)/1" | bc)
+        BUFFERS=$(( $MEM_BUFFERS > 1 ? $MEM_BUFFERS : 1 ))
+        MEM_WORKMEM=$(echo "$MEM_BUFFERS*2" | bc)
+        WORKMEM=$(( $MEM_WORKMEM > 1 ? $MEM_WORKMEM : 1 ))
+        perl -pi -e "s/(?<=^)#?shared_buffers =?.+?(?=\$|\t)/shared_buffers = ${BUFFERS}GB/; \
+            s/(?<=^)#?temp_buffers =?.+?(?=\$|\t)/temp_buffers = ${BUFFERS}GB/; \
+            s/(?<=^)#?work_mem =?.+?(?=\$|\t)/work_mem = ${WORKMEM}GB/; \
             s/(?<=^)#?max_stack_depth =?.+?(?=\$|\t)/max_stack_depth = 7680kB/; \
             s/(?<=^)#?checkpoint_segments =?.+?(?=\$|\t)/checkpoint_segments =256/; \
             s/(?<=^)#?checkpoint_timeout =?.+?(?=\$|\t)/checkpoint_timeout = 30min/; \

@@ -16,6 +16,12 @@ sudo apt-get -f install
 ```bash
 nameles-log-migration [-H] -i <IP field> -u <url/domain field> -d <logday> /path/to/log/files/my_log_000*.csv.gz
 ```
+
+The flag `-H` indicates that the csv log files have a header row with the name of the fields. The rest of the arguments are required and their meaning is the following:
+  - `-i` and `-u` the zero-indexed number of the IP and url/domain fields, respectively, in the csv.
+  - `-d` the day of the log files.
+  - `/path/to/log/files/my_log_000*.csv.gz` list of the compressed log files to upload. You can use a wildcard to match several files, bash will translate it to the full list of matching files.
+
 The script `nameles-log-migration`, when called as above, will create the following tables in the database:
   - **tuples.ip\_ref\_\<logday\>** Table of tuples \<IP, referrer, count\> with the aggregate count of ad-requests for each IP and referrer pair.
   - Temporary tables with the total number of ad-requests and normalized entropy score for the log day of both, referrers and IPs. These tables will be merged in the stats tables for IPs and referrers.

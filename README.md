@@ -1,5 +1,7 @@
-# Nameles
-## First ever open source solution for detecting invalid traffic (ad fraud)
+# Nameles-logfile
+
+Nameles is the first ever open source solution for detecting invalid traffic (ad fraud).
+Repository for computing the Nameles Confidence Score from log files of bid requests.
 
 ### Overview
 
@@ -7,24 +9,42 @@ Nameles is an entropy based open source ad fraud detection solution that detects
 
 Learn more at http://nameles.org
 
-
 ### Getting Started
 
-At the moment you have recommended options:
+##### Install from debian package
 
-##### Install from source (with SQL port)
+From the release tab, select the debian package that suits the PostgreSQL version of your linux distribution and install it:
 
-https://github.com/Nameles-Org/Nameles/tree/master/Nameles-SQL
+```bash
+sudo dpkg -i nameles-postgresql-9.5_0.1-1_amd64.deb
+# It will fail cause the dependencies. Run the next command to install everything
+sudo apt-get -f install
+```
 
-##### Install from source (without SQL port)
+##### How to upload logs
 
-https://github.com/Nameles-Org/Nameles/tree/master/Nameles-nodb
+```bash
+nameles-log-migration [-H] -i <IP field> -u <url/domain field> -d <logday> /path/to/log/files/my_log_000*.csv.gz
+```
 
-NOTE: this will still require PostgreSQL (9.4) to be installed in the system.
+The flag `-H` indicates that the csv log files have a header row with the name of the fields. The rest of the arguments are required and their meaning is the following:
+  - `-i` and `-u` the zero-indexed number of the IP and url/domain fields, respectively, in the csv.
+  - `-d` the day of the log files.
+  - `/path/to/log/files/my_log_000*.csv.gz` list of the compressed log files to upload. You can use a wildcard to match several files, bash will translate it to the full list of matching files.
 
-##### Install from Linux Package [EXPERIMENTAL]
+The script `nameles-log-migration`, when called as above, will create the following tables in the database:
+  - **tuples.ip\_ref\_\<logday\>** Table of tuples \<IP, referrer, count\> with the aggregate count of ad-requests for each IP and referrer pair.
+  - Temporary tables with the total number of ad-requests and the confidence score for the log day of both, referrers and IPs. These tables will be merged in the stats tables for IPs and referrers.
 
-https://github.com/Nameles-Org/Nameles/releases/tag/0.1
+## How to query the database
+The tables in the database can be queried as regular SQL tables. To easily access the Nameles database you can use the `nameles` executable, that is a wrapper to the PostgreSQL client.
+
+Similarly, you can get the statistical thresholds for any day with
+
+```bash
+nameles-get-referrer-thresholds [--minimum <MIN_ENTRIES>] <log_day>
+```
+
 
 
 ### Method
@@ -33,25 +53,32 @@ Nameles use a three staged approach where:
 
 1) Entropy is computed for each referrer in the dataset
 
-2) The Normalized Entropy Score (NES) is calculated for each referrer
+2) The Confidence Score (CS) is calculated for each referrer
 
-3) Based on NES the referrers are grouped in to statistically meaningful groups
+3) Based on CS the referrers are grouped into statistically meaningful groups
 
-The grouping in step-3 is done based on how suspicious the referrer is based on its NES score. The groupings:
+The grouping in step-3 is done based on how suspicious the referrer is based on its confidence score. The groupings:
 
-- critical (highest level of suspicion)
-- high
-- moderate
-- low (highest level of suspicion)
+- No confidence (highest level of suspicion)
+- Low confidence
+- Moderate confidence
+- High Confidence (no suspicion based on the entropy)
 
 The way the score is calculated and the resulting grouping is affected by the way the system owner sets the rules for scoring. The owner is left with the decision if they want to set the system to have many false positive or many false negatives. The recommendation is for "paranoid" setting, as there is much more inventory in the programmatic market than there is demand. In fact, due to the high perishability of media inventory, it is likely that more than 90% of all inventory never gets sold. Even if just 10% is never getting sold, filtering out 10% would not reduce inventory that is available for buying.  
 
 
-### NES Score
+### Confidence Score
 
-The unique value of Nameles is the Normalized Entropy Score (NES) it provides for any referrer, regardless if it's desktop or mobile, app, video or banners. The formal expression to compute NES is as follows:
+The unique value of Nameles is the Confidence Score (CS) it provides for any referrer, regardless if it's desktop or mobile, app, video or banners. The formal expression to compute CS is as follows:
 
-[![Screen Shot 2016-12-29 at 18.34.59.png](https://s23.postimg.org/noboa25fv/Screen_Shot_2016_12_29_at_18_34_59.png)](https://postimg.org/image/vh2c21bev/)
+![
+                             /        __ n                          \                
+                             |       \         C(x ) log (C(x ) )   |                
+                             |       /__ i = 1    i     2    i      |                
+               CS(X)  =  100 | 1  -  ------------------------------ |                
+                             |             C(X) log (C(X) )         |                
+                             \                     2                /                
+](CS_formula.png)
 
 
 ### Total-Cost-of-Operation

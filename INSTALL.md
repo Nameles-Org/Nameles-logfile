@@ -1,5 +1,5 @@
 # nameles-postgresql
-Scripts and functions to compute the normalized entropy score in PostgreSQL (>=9.4)
+Scripts and functions to compute the Confidence Score in PostgreSQL (>=9.4)
 
 ## Install from debian package
 
@@ -24,7 +24,7 @@ The flag `-H` indicates that the csv log files have a header row with the name o
 
 The script `nameles-log-migration`, when called as above, will create the following tables in the database:
   - **tuples.ip\_ref\_\<logday\>** Table of tuples \<IP, referrer, count\> with the aggregate count of ad-requests for each IP and referrer pair.
-  - Temporary tables with the total number of ad-requests and normalized entropy score for the log day of both, referrers and IPs. These tables will be merged in the stats tables for IPs and referrers.
+  - Temporary tables with the total number of ad-requests and the confidence score for the log day of both, referrers and IPs. These tables will be merged in the stats tables for IPs and referrers.
 
 ## How to query the database
 The tables in the database can be queried as regular SQL tables. To easily access the Nameles database you can use the `nameles` executable, that is a wrapper to the PostgreSQL client.

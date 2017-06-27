@@ -27,14 +27,14 @@ def main(log_day,min_requests):
     (perc100,perc75,perc50,perc25) = cur.fetchone()[0]
     IQR = perc75-perc25
     UHR = perc100-perc50
-    slightly_suspicious = perc50 - UHR
-    suspicious = perc50 - 2*UHR
-    highly_suspicious = perc25 - 1.5*IQR
+    moderate_confidence = perc50 - UHR
+    low_confidence = perc50 - 2*UHR
+    no_confidence = perc25 - 1.5*IQR
 
     print("Statistical thresholds")
-    print("Slightly suspicious:\t", slightly_suspicious)
-    print("Suspicious:\t\t", suspicious)
-    print("Highly suspicious:\t", highly_suspicious)
+    print("Moderate Confidence:\t", moderate_confidence)
+    print("Low Confidence:\t\t", low_confidence)
+    print("No Confidence:\t", no_confidence)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute statistical thresholds for the referrer's score")

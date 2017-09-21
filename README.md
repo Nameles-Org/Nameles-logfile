@@ -3,15 +3,45 @@
 Nameles is the first ever open source solution for detecting invalid traffic (ad fraud).
 Repository for computing the Nameles Confidence Score from log files of bid requests.
 
-### Overview
+## Overview
 
 Nameles is an entropy based open source ad fraud detection solution that detects traffic anomalies agnostically across desktop and mobile. It has been proven[[1]](http://www.it.uc3m.es/rcuevas/techreports/entropy_method.pdf) to deliver excellent results in detecting banner, video and app fraud at large scale with minimal Total-Cost-of-Ownership.
 
 Learn more at http://nameles.org
 
-### Getting Started
+## Getting Started
 
-##### Install from debian package
+### Installation
+
+You have two options for installation: 
+
+- Install one of the [releases](https://github.com/Nameles-Org/Nameles-logfile/releases)
+- Install from source 
+
+#### Install from Debian Package
+
+From the [releases](https://github.com/Nameles-Org/Nameles-logfile/releases) choose the right package based on which psql version you have. You can check the version first. 
+
+Server version:
+
+    pg_config --version
+
+Client version:
+
+    psql --version
+
+The easiest is to go with 9.6 which is the latest version: 
+
+    # preparation for installing psql
+    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+    wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+    sudo apt-get update 
+    
+    # install psql
+    sudo apt-get install postgresql postgresql-contrib postgresql-client
+
+####
+
 
 From the release tab, select the debian package that suits the PostgreSQL version of your linux distribution and install it:
 

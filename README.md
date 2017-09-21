@@ -119,6 +119,9 @@ In the case of NRC, we can safely say that it is negligible. In fact, a small st
 
 In terms of RC, depending on the database backend, the C codes that compute the NES can process roughly 10 billion rows of bid stream data per 24 hour period with a 16-core 48gb RAM Linux server. Using the same machine and the SQL provided you'll find in this repository, scores can be computed to up to 2 billion rows per day.
 
+### Preparing the logfile
+
+NOTE: You might get error nameles-log-migration unless you have data in both input columns for each sample. Also it does not make any sense to input data where one field is missing as both referrer/domain and IP is needed for score computation. 
 
 ### Log File Format
 

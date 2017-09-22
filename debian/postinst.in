@@ -20,8 +20,7 @@ set -e
 
 case "$1" in
     configure)
-        PORT=$(pg_createcluster --start @PGSQL_MAJOR@ nmls -- --auth-local=trust 2>/dev/null | grep port | grep -oE [0-9]+)
-        echo $PORT > /usr/share/nameles/nameles-port
+        PORT=$(pg_createcluster --start @PGSQL_MAJOR@ nmls -- --auth-local=trust 2>/dev/null | tail -1 | tr -s ' ' | cut -d ' ' -f3 > /usr/share/nameles/nameles-port
         MEMTOTAL=$(awk '/^MemTotal:/ {mem_kb=$2}; END {print mem_kb/1024/1024}' /proc/meminfo)
         CPU_COUNT=$(lscpu | awk '/^Core\(s\) per socket:/ {cores=$NF}; /^Socket\(s\):/ {sockets=$NF}; END{print cores*sockets}')
         AUTOVACUUM_WORKERS=$(( $CPU_COUNT > 5 ? $CPU_COUNT/3 : 1 ))

@@ -18,7 +18,7 @@ ALTER DATABASE nameles set search_path TO public,stats,tuples,lookup;
 -- Generic tuples table
 CREATE TABLE tuples.ip_ref (
   ip cidr DEFAULT NULL, -- classless inter-domain routing IP type
-  referrer text DEFAULT NULL,
+  referrer text collate "C.UTF-8" DEFAULT NULL,
   cnt int DEFAULT NULL
 );
 

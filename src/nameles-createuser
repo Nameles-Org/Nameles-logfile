@@ -1,4 +1,6 @@
 #!/bin/bash
+#!/
+read -r PORT < /usr/share/nameles/nameles-port
 
 print_usage(){
   echo "usage: nameles-createuser [options] user_name"
@@ -31,6 +33,6 @@ do
 esac
 done
 
-( cd /tmp && sudo -u postgres createuser -erd $PASS $NEWUSER )
+( cd /tmp && sudo -u postgres createuser -p $PORT -erd $PASS $NEWUSER )
 
-( cd /tmp && sudo -u postgres psql -d nameles -c "GRANT nameles TO $NEWUSER" )
+( cd /tmp && sudo -u postgres psql -p $PORT -U nameles -d nameles -c "GRANT nameles TO $NEWUSER" )

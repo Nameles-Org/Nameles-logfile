@@ -3,7 +3,6 @@
 
 """Script for migrating log files into postgreSQL tables"""
 
-import os
 import re
 import sys
 sys.path.append("/usr/share/nameles/libs")
@@ -33,11 +32,15 @@ __email__ = "anpastor@it.uc3m.es"
 __status__ = "Development"
 
 
-POSTGRES_USER = 'nameles' # getuser()
+POSTGRES_USER = 'nameles'  # getuser()
 POSTGRES_DB = 'nameles'
-with open('/usr/share/nameles/nameles-port') as port_file:
-	POSTGRES_PORT = port_file.readline().rstrip()
-TEMP_TABLE = 'temp' # default value changed in main
+try:
+    with open('/usr/share/nameles/nameles-port', 'r') as f:
+        POSTGRES_PORT = int(f.read().rstrip())
+except ValueError:
+    POSTGRES_PORT = 5430
+
+TEMP_TABLE = 'temp'  # default value changed in main
 
 csv_header = False
 ip_field = None
@@ -46,8 +49,10 @@ domain_field = None
 # The memory used uploading the logs depends directly on these two variables
 mem = virtual_memory()
 
-CORES = int(cpu_count()/2) # Number of threads for loading log files
-CHUNK_SIZE = int((mem.total/1024/1024/1024)*0.75/CORES) # Number of files that each thread load in memory before inserting the values in the database
+CORES = int(cpu_count()/2)  # Number of threads for loading log files
+# Number of files that each thread load in memory before inserting
+# the values in the database
+CHUNK_SIZE = int((mem.total/1024/1024/1024)*0.75/CORES)
 
 processed_files = None
 total_files = None
@@ -67,23 +72,25 @@ def main(args):
     ip_field = args.ip
     domain_field = args.url
 
-    processed_files = Value('i',0)
-    total_files = Value('i',len(compressed_files))
+    processed_files = Value('i', 0)
+    total_files = Value('i', len(compressed_files))
 
-    conn = psycopg2.connect("dbname=%s user=%s port=%s" % (POSTGRES_DB, POSTGRES_USER, POSTGRES_PORT))
+    conn = psycopg2.connect("dbname=%s user=%s port=%s" %
+                            (POSTGRES_DB, POSTGRES_USER, POSTGRES_PORT))
     cur = conn.cursor()
     cur.execute("SET ROLE nameles")
     conn.commit()
-    cur.execute("CREATE table IF NOT EXISTS {} ( ) INHERITS (tuples.ip_ref)".format(TEMP_TABLE))
+    cur.execute("CREATE table IF NOT EXISTS {} ( ) INHERITS (tuples.ip_ref)"
+                .format(TEMP_TABLE))
     conn.commit()
 
     printProgress(processed_files.value, total_files.value,
-        prefix = '[' + str(processed_files.value) + '/'+str(total_files.value)+']', suffix = '',
-        decimals = 0, barLength = 50)
+                  prefix='['+str(processed_files.value)+'/'+str(total_files.value)+']',
+                  suffix='', decimals=0, barLength=50)
     start_time = time()
     try:
         pool = Pool(processes=CORES, maxtasksperchild=1)
-        torun = [compressed_files[i:i+CHUNK_SIZE] for i in range(0,len(compressed_files),CHUNK_SIZE)]
+        torun = [compressed_files[i:i+CHUNK_SIZE] for i in range(0, len(compressed_files), CHUNK_SIZE)]
         pool.map(read_gzcsv, torun, 1)
     except:
         print("error on parallel COPY to postgres")

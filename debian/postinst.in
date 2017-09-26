@@ -20,8 +20,9 @@ set -e
 
 case "$1" in
     configure)
-        PORT=$(pg_createcluster --start @PGSQL_MAJOR@ nmls -- --auth-local=trust 2>/dev/null | grep port | grep -oE [0-9]+)
-        echo $PORT > /usr/share/nameles/nameles-port
+        PGSQL_PORT=5430
+        pg_createcluster --port $PGSQL_PORT --start @PGSQL_MAJOR@ nmls -- --auth-local=trust 2>/dev/null
+        echo $PGSQL_PORT > /usr/share/nameles/nameles-port
         MEMTOTAL=$(awk '/^MemTotal:/ {mem_kb=$2}; END {print mem_kb/1024/1024}' /proc/meminfo)
         CPU_COUNT=$(lscpu | awk '/^Core\(s\) per socket:/ {cores=$NF}; /^Socket\(s\):/ {sockets=$NF}; END{print cores*sockets}')
         AUTOVACUUM_WORKERS=$(( $CPU_COUNT > 5 ? $CPU_COUNT/3 : 1 ))
@@ -42,8 +43,9 @@ case "$1" in
             s/(?<=^)#?autovacuum_max_workers =?.+?(?=\$|\t)/autovacuum_max_workers = $AUTOVACUUM_WORKERS/" \
             /etc/postgresql/@PGSQL_MAJOR@/nmls/postgresql.conf
         pg_ctlcluster @PGSQL_MAJOR@ nmls restart
-        sudo -u postgres psql -p $PORT -f /usr/share/nameles/create_db.sql
-        sudo -u postgres psql  -p $PORT -d nameles -f /usr/share/nameles/create_functions.sql
+        sudo -u postgres psql -p $PGSQL_PORT -f /usr/share/nameles/create_db.sql
+        sudo -u postgres psql  -p $PGSQL_PORT -d nameles -f /usr/share/nameles/create_functions.sql
+        echo "
     ;;
 
     install)

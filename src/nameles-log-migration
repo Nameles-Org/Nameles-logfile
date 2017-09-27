@@ -49,10 +49,10 @@ domain_field = None
 # The memory used uploading the logs depends directly on these two variables
 mem = virtual_memory()
 
-CORES = int(cpu_count()/2)  # Number of threads for loading log files
+CORES = max(int(cpu_count()/2), 1)  # Number of threads for loading log files
 # Number of files that each thread load in memory before inserting
 # the values in the database
-CHUNK_SIZE = int((mem.total/1024/1024/1024)*0.75/CORES)
+CHUNK_SIZE = max(int((mem.total/1024/1024/1024)*0.75/CORES), 1)
 
 processed_files = None
 total_files = None

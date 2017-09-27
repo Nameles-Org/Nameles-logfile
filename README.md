@@ -46,7 +46,7 @@ The easiest is to go with 9.6 which is the latest version:
 From the release tab, select the debian package that suits the PostgreSQL version of your linux distribution and install it:
 
 ```bash
-sudo dpkg -i nameles-postgresql-9.5_0.1-1_amd64.deb
+sudo dpkg -i nameles-postgresql-9.6_0.1-1_amd64.deb
 # It will fail cause the dependencies. Run the next command to install everything
 sudo apt-get -f install
 ```

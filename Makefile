@@ -5,7 +5,6 @@ PKGLIBDIR =$(shell pg_config --pkglibdir)
 BINDIR = /usr/bin
 SHAREDIR = /usr/share/nameles
 LNAME = libentropy-postgresql.so
-LSONAME = libentropy-postgresql.so.$(PGSQLMAJOR)
 BINNAME = nameles-log-migration nameles-get-referrer-thresholds nameles
 SHARENAME = create_db.sql create_functions.sql test_functions.sql
 OBJS = entropy.o
@@ -19,7 +18,7 @@ $(LNAME): $(OBJS)
 	$(CC)  $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
 
-.PHONY: install uninstall clean # libs
+.PHONY: install uninstall clean libs
 
 libs:
 	if [ ! -d "libs/tld" ]; then pip3 install tld --no-compile --no-deps -t libs; fi

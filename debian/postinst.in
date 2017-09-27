@@ -45,7 +45,6 @@ case "$1" in
         pg_ctlcluster @PGSQL_MAJOR@ nmls restart
         sudo -u postgres psql -p $PGSQL_PORT -f /usr/share/nameles/create_db.sql
         sudo -u postgres psql  -p $PGSQL_PORT -d nameles -f /usr/share/nameles/create_functions.sql
-        echo "
     ;;
 
     install)
@@ -56,7 +55,7 @@ case "$1" in
     ;;
 
     *)
-        echo "postinst called with unknown argument \`$1'" >&2
+        echo "postinst called with unknown argument $1" >&2
         exit 1
     ;;
 esac
